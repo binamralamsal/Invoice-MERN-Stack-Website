@@ -1,8 +1,8 @@
 import App from "./app";
-import "module-alias/register";
 
 import { AuthRoutes } from "./routes";
+import ProductRoutes from "./routes/product.route";
 
-const app = new App([new AuthRoutes()]);
+const app = new App([new AuthRoutes(), new ProductRoutes()]);
 
 app.listen();

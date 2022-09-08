@@ -9,5 +9,5 @@ export interface DataStoredInToken {
 }
 
 export interface RequestWithUser extends Request {
-  user: DocumentType<UserSchema>;
+  user?: DocumentType<UserSchema>;
 }
