@@ -1,4 +1,4 @@
-import { getModelForClass, prop, Ref } from "@typegoose/typegoose";
+import {getModelForClass, modelOptions, prop, Ref} from "@typegoose/typegoose";
 import { ProductSchema } from "./product.model";
 
 class InvoiceItem {
@@ -12,6 +12,11 @@ class InvoiceItem {
   public quantity!: number;
 }
 
+@modelOptions({
+  options: {
+    customName: "Invoice",
+  },
+})
 export class InvoiceSchema {
   @prop({ required: true })
   public customerName!: string;
