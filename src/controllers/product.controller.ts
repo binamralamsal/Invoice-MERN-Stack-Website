@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { Product } from "../models";
+import config from "../config";
 
 class ProductController {
-  private ITEMS_PER_PAGE = 20;
-
   /**
    * @desc    Get all products
    * @route   GET /api/products/
@@ -14,13 +13,13 @@ class ProductController {
 
     const totalProducts = await Product.countDocuments();
     const products = await Product.find({})
-      .skip((page - 1) * this.ITEMS_PER_PAGE)
-      .limit(this.ITEMS_PER_PAGE);
+      .skip((page - 1) * config.PAGINATION_ITEMS_PER_PAGE)
+      .limit(config.PAGINATION_ITEMS_PER_PAGE);
 
     res.json({
       products,
       currentPage: page,
-      hasNextPage: this.ITEMS_PER_PAGE * page < totalProducts,
+      hasNextPage: config.PAGINATION_ITEMS_PER_PAGE * page < totalProducts,
       hasPreviousPage: page > 1,
     });
   }

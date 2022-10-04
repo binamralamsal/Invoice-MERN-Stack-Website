@@ -1,9 +1,22 @@
-import {getModelForClass, modelOptions, prop, Ref} from "@typegoose/typegoose";
+import {
+  getModelForClass,
+  modelOptions,
+  prop,
+  Ref,
+} from "@typegoose/typegoose";
 import { ProductSchema } from "./product.model";
+
+class InvoiceProductSize {
+  @prop({ required: true })
+  public name!: string;
+}
 
 class InvoiceItem {
   @prop({ ref: ProductSchema })
   public product!: Ref<ProductSchema>;
+
+  @prop({ type: InvoiceProductSize })
+  public size!: InvoiceProductSize;
 
   @prop({ required: true })
   public price!: number;

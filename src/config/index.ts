@@ -13,6 +13,9 @@ const config = cleanEnv(process.env, {
   JWT_SECRET: str({
     default: "VERY_VERY_STRONG_JWT_SECRET_THAT_NO_ONE_CAN_GUESS",
   }),
+  PAGINATION_ITEMS_PER_PAGE: num({
+    default: 20
+  })
 });
 
 export default config;
