@@ -21,6 +21,14 @@ class ProductRoutes implements Routes {
       validate(productSchema),
       this.productController.postProduct
     );
+    this.router.get("/:id", auth, this.productController.getProduct);
+    this.router.put(
+      "/:id",
+      auth,
+      validate(productSchema),
+      this.productController.putProduct
+    );
+    this.router.delete("/:id", auth, this.productController.deleteProduct);
   }
 }
 

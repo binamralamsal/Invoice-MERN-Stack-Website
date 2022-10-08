@@ -6,7 +6,8 @@ export const productSchema = z.object({
     .array(
       z.object({
         name: z.string({ required_error: "Size name is required" }),
-        costPrice: z.number({ required_error: "Product price is required" }),
+        costPrice: z.number({ required_error: "Cost price is required" }),
+        sellingPrice: z.number({ required_error: "Selling price is required" }),
         remainingStock: z.number({
           required_error: "Remaining stock of product is required",
         }),

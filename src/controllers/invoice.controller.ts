@@ -1,8 +1,27 @@
 import { Request, Response } from "express";
-import { Invoice, Product } from "../models";
+import { Invoice, Product, ProductSchema } from "../models";
 import config from "../config";
+import { HttpException } from "../exceptions";
+import mongoose from "mongoose";
+import { Ref } from "@typegoose/typegoose";
 
 class InvoiceController {
+  private static generateUpdateOperation(
+    productId: Ref<ProductSchema, mongoose.Types.ObjectId | undefined>,
+    sizeId: any,
+    newQuantity: number
+  ) {
+    return {
+      updateOne: {
+        filter: { _id: productId, "sizes._id": sizeId },
+        update: {
+          $inc: {
+            "sizes.$.remainingStock": newQuantity,
+          },
+        },
+      },
+    };
+  }
   /**
    * @desc    Get all invoices
    * @route   GET /api/invoices/
@@ -14,6 +33,8 @@ class InvoiceController {
 
     const totalInvoices = await Invoice.countDocuments();
     const invoices = await Invoice.find({})
+      .select("customerName createdAt")
+      .sort({ createdAt: "desc" })
       .skip((page - 1) * config.PAGINATION_ITEMS_PER_PAGE)
       .limit(config.PAGINATION_ITEMS_PER_PAGE);
 
@@ -32,19 +53,166 @@ class InvoiceController {
    */
   public async postInvoice(req: Request, res: Response) {
     const invoice = await Invoice.create(req.body);
-    res.json(invoice);
+    res.status(401).json(invoice);
 
-    for (const item of invoice.items) {
-      await Product.updateOne(
-        { _id: item.product, "sizes._id": (item as any).size._id },
+    // for (const item of invoice.items) {
+    //   await Product.updateOne(
+    //     { _id: item.product, "sizes._id": (item as any).size._id },
+    //     {
+    //       $inc: {
+    //         "sizes.$.remainingStock": -item.quantity,
+    //       },
+    //     }
+    //   );
+    // }
+
+    const bulkOperations = invoice.items.map((item) => {
+      // return {
+      //   updateOne: {
+      //     filter: { _id: item.product, "sizes._id": (item as any).size._id },
+      //     update: {
+      //       $inc: {
+      //         "sizes.$.remainingStock": -item.quantity,
+      //       },
+      //     },
+      //   },
+      // };
+      return InvoiceController.generateUpdateOperation(
+        item.product,
+        (item as any).size._id,
+        -item.quantity
+      );
+    });
+
+    await Product.bulkWrite(bulkOperations);
+  }
+
+  /**
+   * @desc    Get an invoice
+   * @route   GET /api/invoices/:id
+   * @access  Admin
+   */
+  public async getInvoice(req: Request, res: Response) {
+    const invoice = (
+      await Invoice.aggregate([
+        { $match: { _id: new mongoose.Types.ObjectId(req.params.id) } },
         {
-          $inc: {
-            "sizes.$.remainingStock": -item.quantity,
-            totalRemainingStock: -item.quantity,
+          $addFields: {
+            totalCostPrice: {
+              $sum: {
+                $map: {
+                  input: "$items",
+                  in: {
+                    $multiply: ["$$this.quantity", "$$this.size.costPrice"],
+                  },
+                },
+              },
+            },
+            totalSellingPrice: {
+              $reduce: {
+                input: "$items",
+                initialValue: 0,
+                in: {
+                  $add: [
+                    "$$value",
+                    {
+                      $multiply: [
+                        "$$this.quantity",
+                        "$$this.size.sellingPrice",
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
           },
-        }
+        },
+      ])
+    )[0];
+    if (!invoice) throw new HttpException(404, "Invoice not found");
+
+    const { totalSellingPrice, totalCostPrice } = invoice;
+    const profit = `${
+      ((totalSellingPrice - totalCostPrice) / totalCostPrice) * 100
+    }%`;
+    res.json({ ...invoice, profit });
+  }
+
+  /**
+   * @desc    Update an invoice
+   * @route   PUT /api/invoices/:id
+   * @access  Admin
+   */
+  public async putInvoice(req: Request, res: Response) {
+    const invoice = await Invoice.findByIdAndUpdate(req.params.id, req.body);
+    if (!invoice) throw new HttpException(422, "Invoice not found");
+
+    const oldItems = invoice.items;
+    const newItems = req.body.items;
+    const newIds: string[] = [];
+    const allOperations = [];
+
+    for (const newItem of newItems) {
+      newIds.push(newItem.size._id);
+      const oldItem = oldItems.find(
+        (a) =>
+          ((a as any).size._id as mongoose.Types.ObjectId).toHexString() ===
+          newItem.size._id
+      );
+
+      const newQuantity = (oldItem?.quantity || 0) - newItem.quantity;
+      if (newQuantity === 0) continue;
+
+      allOperations.push(
+        // {
+        //   updateOne: {
+        //     filter: {
+        //       _id: newItem.product,
+        //       "sizes._id": (newItem as any).size._id,
+        //     },
+        //     update: {
+        //       $inc: {
+        //         "sizes.$.remainingStock": newQuantity,
+        //       },
+        //     },
+        //   },
+        // },
+        InvoiceController.generateUpdateOperation(
+          newItem.product,
+          (newItem as any).size._id,
+          newQuantity
+        )
       );
     }
+
+    const remainingOldItems = oldItems.filter(
+      (a) => !newIds.includes((a as any).size._id.toHexString())
+    );
+    remainingOldItems.forEach((item) => {
+      allOperations.push(
+        // {
+        //   updateOne: {
+        //     filter: {
+        //       _id: item.product,
+        //       "sizes._id": (item as any).size._id,
+        //     },
+        //     update: {
+        //       $inc: {
+        //         "sizes.$.remainingStock": item.quantity,
+        //       },
+        //     },
+        //   },
+        // },
+        InvoiceController.generateUpdateOperation(
+          item.product,
+          (item as any).size._id,
+          item.quantity
+        )
+      );
+    });
+
+    await Product.bulkWrite(allOperations);
+    res.json({ status: 200, message: "Invoice updated successfully" });
   }
 
   /**
@@ -52,7 +220,33 @@ class InvoiceController {
    * @route   DELETE /api/invoices/:id
    * @access  Admin
    */
-  public deleteInvoice() {}
+  public async deleteInvoice(req: Request, res: Response) {
+    const invoice = await Invoice.findByIdAndDelete(req.params.id);
+    res.json("Invoice deleted successfully");
+
+    if (!invoice) return;
+
+    const bulkOperations = invoice.items.map((item) =>
+      InvoiceController.generateUpdateOperation(
+        item.product,
+        (item as any).size._id,
+        item.quantity
+      )
+    );
+    //   return {
+    //     updateOne: {
+    //       filter: { _id: item.product, "sizes._id": (item as any).size._id },
+    //       update: {
+    //         $inc: {
+    //           "sizes.$.remainingStock": item.quantity,
+    //         },
+    //       },
+    //     },
+    //   };
+    // });
+
+    await Product.bulkWrite(bulkOperations);
+  }
 }
 
 export default InvoiceController;

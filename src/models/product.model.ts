@@ -1,11 +1,6 @@
-import {
-  modelOptions,
-  getModelForClass,
-  prop,
-  pre,
-} from "@typegoose/typegoose";
+import { modelOptions, getModelForClass, prop } from "@typegoose/typegoose";
 
-class ProductSize {
+export class ProductSize {
   @prop({ required: true })
   public name!: string;
 
@@ -13,18 +8,18 @@ class ProductSize {
   public costPrice!: number;
 
   @prop({ required: true })
+  public sellingPrice!: number;
+
+  @prop({ required: true })
   public remainingStock!: number;
 }
 
-@pre<ProductSchema>("save", function () {
-  this.totalRemainingStock = this.sizes.reduce(
-    (a, b) => a + b.remainingStock,
-    0
-  );
-})
 @modelOptions({
   options: {
     customName: "Product",
+  },
+  schemaOptions: {
+    timestamps: true,
   },
 })
 export class ProductSchema {
@@ -33,9 +28,6 @@ export class ProductSchema {
 
   @prop({ required: true, default: [], type: () => ProductSize })
   public sizes!: ProductSize[];
-
-  @prop({ required: true, default: 0 })
-  public totalRemainingStock!: number;
 }
 
 export default getModelForClass(ProductSchema);

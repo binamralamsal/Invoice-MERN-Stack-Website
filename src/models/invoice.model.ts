@@ -9,6 +9,12 @@ import { ProductSchema } from "./product.model";
 class InvoiceProductSize {
   @prop({ required: true })
   public name!: string;
+
+  @prop({ required: true })
+  public costPrice!: number;
+
+  @prop({ required: true })
+  public sellingPrice!: number;
 }
 
 class InvoiceItem {
@@ -19,15 +25,15 @@ class InvoiceItem {
   public size!: InvoiceProductSize;
 
   @prop({ required: true })
-  public price!: number;
-
-  @prop({ required: true })
   public quantity!: number;
 }
 
 @modelOptions({
   options: {
     customName: "Invoice",
+  },
+  schemaOptions: {
+    timestamps: true,
   },
 })
 export class InvoiceSchema {

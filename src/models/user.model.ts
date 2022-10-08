@@ -22,6 +22,9 @@ import config from "../config";
   options: {
     customName: "User",
   },
+  schemaOptions: {
+    timestamps: true,
+  },
 })
 export class UserSchema {
   @prop({ required: true, unique: true })

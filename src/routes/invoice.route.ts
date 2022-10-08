@@ -21,6 +21,14 @@ class InvoiceRoutes implements Routes {
       validate(invoiceSchema),
       this.invoiceController.postInvoice
     );
+    this.router.get("/:id", auth, this.invoiceController.getInvoice);
+    this.router.put(
+      "/:id",
+      auth,
+      validate(invoiceSchema),
+      this.invoiceController.putInvoice
+    );
+    this.router.delete("/:id", auth, this.invoiceController.deleteInvoice);
   }
 }
 
