@@ -55,28 +55,7 @@ class InvoiceController {
     const invoice = await Invoice.create(req.body);
     res.status(401).json(invoice);
 
-    // for (const item of invoice.items) {
-    //   await Product.updateOne(
-    //     { _id: item.product, "sizes._id": (item as any).size._id },
-    //     {
-    //       $inc: {
-    //         "sizes.$.remainingStock": -item.quantity,
-    //       },
-    //     }
-    //   );
-    // }
-
     const bulkOperations = invoice.items.map((item) => {
-      // return {
-      //   updateOne: {
-      //     filter: { _id: item.product, "sizes._id": (item as any).size._id },
-      //     update: {
-      //       $inc: {
-      //         "sizes.$.remainingStock": -item.quantity,
-      //       },
-      //     },
-      //   },
-      // };
       return InvoiceController.generateUpdateOperation(
         item.product,
         (item as any).size._id,
@@ -149,11 +128,12 @@ class InvoiceController {
 
     const oldItems = invoice.items;
     const newItems = req.body.items;
-    const newIds: string[] = [];
+    const currentItemsIds: string[] = [];
     const allOperations = [];
 
+    // Operations for the items which aren't removed and are still in updated document
     for (const newItem of newItems) {
-      newIds.push(newItem.size._id);
+      currentItemsIds.push(newItem.size._id);
       const oldItem = oldItems.find(
         (a) =>
           ((a as any).size._id as mongoose.Types.ObjectId).toHexString() ===
@@ -164,19 +144,6 @@ class InvoiceController {
       if (newQuantity === 0) continue;
 
       allOperations.push(
-        // {
-        //   updateOne: {
-        //     filter: {
-        //       _id: newItem.product,
-        //       "sizes._id": (newItem as any).size._id,
-        //     },
-        //     update: {
-        //       $inc: {
-        //         "sizes.$.remainingStock": newQuantity,
-        //       },
-        //     },
-        //   },
-        // },
         InvoiceController.generateUpdateOperation(
           newItem.product,
           (newItem as any).size._id,
@@ -185,24 +152,12 @@ class InvoiceController {
       );
     }
 
-    const remainingOldItems = oldItems.filter(
-      (a) => !newIds.includes((a as any).size._id.toHexString())
+    // Operations for the items which are removed
+    const removedItems = oldItems.filter(
+      (a) => !currentItemsIds.includes((a as any).size._id.toHexString())
     );
-    remainingOldItems.forEach((item) => {
+    removedItems.forEach((item) => {
       allOperations.push(
-        // {
-        //   updateOne: {
-        //     filter: {
-        //       _id: item.product,
-        //       "sizes._id": (item as any).size._id,
-        //     },
-        //     update: {
-        //       $inc: {
-        //         "sizes.$.remainingStock": item.quantity,
-        //       },
-        //     },
-        //   },
-        // },
         InvoiceController.generateUpdateOperation(
           item.product,
           (item as any).size._id,
@@ -233,17 +188,6 @@ class InvoiceController {
         item.quantity
       )
     );
-    //   return {
-    //     updateOne: {
-    //       filter: { _id: item.product, "sizes._id": (item as any).size._id },
-    //       update: {
-    //         $inc: {
-    //           "sizes.$.remainingStock": item.quantity,
-    //         },
-    //       },
-    //     },
-    //   };
-    // });
 
     await Product.bulkWrite(bulkOperations);
   }
