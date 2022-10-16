@@ -10,9 +10,6 @@ const storage = {
   clearToken: () => {
     window.localStorage.removeItem(`${storagePrefix}token`);
   },
-  clearMode: () => {
-    window.localStorage.removeItem("mode");
-  },
 };
 
 export default storage;
