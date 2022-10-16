@@ -55,11 +55,14 @@ class App {
     });
 
     if (process.env.NODE_ENV === "production") {
-      this.app.use(express.static(path.join(__dirname, "client", "dist")));
-
-      this.app.get("*", (req: Request, res: Response) =>
-        res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"))
+      this.app.use(
+        express.static(path.join(__dirname, "..", "client", "dist"))
       );
+      this.app.get("*", (req: Request, res: Response) => {
+        res.sendFile(
+          path.resolve(__dirname, "..", "client", "dist", "index.html")
+        );
+      });
     } else {
       this.app.get("/", (req, res) => {
         res.send("API is running....");
