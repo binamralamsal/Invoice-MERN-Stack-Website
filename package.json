@@ -7,7 +7,8 @@
     "start": "node dist/server.js",
     "dev": "ts-node-dev --files src/server.ts",
     "test": "vitest --config ./vitest.config.ts",
-    "build": "tsc && npm run build --prefix client"
+    "client-build": "npm install --prefix client && npm run build --prefix client",
+    "build": "tsc && npm run client-build"
   },
   "keywords": [],
   "author": "",
