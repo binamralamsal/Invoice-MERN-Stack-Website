@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
-import express, { Application } from "express";
+import express, { Application, Request, Response } from "express";
 
 import config from "./config";
 import Routes from "./interfaces/routes.interface";
 import { error } from "./middlewares";
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import path from "path";
 
 class App {
   public app: Application;
@@ -52,6 +53,18 @@ class App {
     routes.forEach((route) => {
       this.app.use(route.path, route.router);
     });
+
+    if (process.env.NODE_ENV === "production") {
+      this.app.use(express.static(path.join(__dirname, "client", "dist")));
+
+      this.app.get("*", (req: Request, res: Response) =>
+        res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"))
+      );
+    } else {
+      this.app.get("/", (req, res) => {
+        res.send("API is running....");
+      });
+    }
   }
 
   private initializeSwagger() {
