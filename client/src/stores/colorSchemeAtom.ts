@@ -1,5 +1,7 @@
-import { atom } from "jotai/esm";
+import { atomWithStorage } from "jotai/utils";
 
 export type ColorScheme = "light" | "dark";
 
-export const colorscheme = atom<ColorScheme>("light");
+const initialValue = window.matchMedia("(prefers-color-scheme: dark").matches ? "dark" : "light";
+
+export const colorSchemeAtom = atomWithStorage<ColorScheme>("mode", initialValue);

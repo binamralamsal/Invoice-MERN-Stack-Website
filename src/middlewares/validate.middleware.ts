@@ -1,12 +1,11 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
 import { HttpException } from "../exceptions";
-import { z, AnyZodObject } from "zod";
+import { AnyZodObject } from "zod";
 
 const validate = (schema: AnyZodObject) => {
   return async (req: Request, _: Response, next: NextFunction) => {
     try {
-      const parsedBody = await schema.parseAsync(req.body);
-      req.body = parsedBody;
+      req.body = await schema.parseAsync(req.body);
 
       return next();
     } catch (error) {

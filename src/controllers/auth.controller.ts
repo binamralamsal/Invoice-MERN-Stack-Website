@@ -37,6 +37,15 @@ class AuthController {
       .status(200)
       .json({ token: user.generateToken(), userId: user._id.toString() });
   }
+
+  /**
+   * @desc    Get a user
+   * @route   POST /api/auth/:id
+   * @access  Authenticated
+   */
+  public async getLoggedInUser(req: Request, res: Response) {
+    res.send(req.user);
+  }
 }
 
 export default AuthController;
