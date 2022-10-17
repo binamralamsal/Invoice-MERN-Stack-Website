@@ -1,5 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, PasswordInput, TextInput } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
+import { IconCheck } from "@tabler/icons";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -23,9 +25,13 @@ export const LoginForm = () => {
     if (!response) return;
     storage.setToken(JSON.stringify(response));
     navigate("/");
+    showNotification({
+      icon: <IconCheck size={16} />,
+      color: "teal",
+      title: "Logged in successfully",
+      message: "Explore the dashboard",
+    });
   };
-
-  console.log(errors);
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)}>
