@@ -1,47 +1,49 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, PasswordInput, TextInput } from "@mantine/core";
-import { FormEvent, useRef } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
 import storage from "@/utils/storage";
 
 import { login } from "../api/login";
+import { loginValidator, LoginCredentialsDTO } from "../validators";
 
 export const LoginForm = () => {
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginCredentialsDTO>({ resolver: zodResolver(loginValidator), mode: "all" });
 
   const navigate = useNavigate();
 
-  const handleFormSubmit = async (event: FormEvent) => {
-    event.preventDefault();
+  const handleFormSubmit: SubmitHandler<LoginCredentialsDTO> = async (data) => {
+    const response = await login(data);
 
-    if (!emailRef.current || !passwordRef.current) return;
-    const emailValue = emailRef.current.value;
-    const passwordValue = passwordRef.current.value;
-    const data = await login({ email: emailValue, password: passwordValue });
-
-    if (!data) return;
-    storage.setToken(JSON.stringify(data));
+    if (!response) return;
+    storage.setToken(JSON.stringify(response));
     navigate("/");
   };
 
+  console.log(errors);
+
   return (
-    <form onSubmit={handleFormSubmit}>
+    <form onSubmit={handleSubmit(handleFormSubmit)}>
       <TextInput
         label="Email"
-        ref={emailRef}
-        // type="email"
+        type="email"
         placeholder="you@mantine.dev"
-        // required
+        {...register("email")}
+        error={errors.email?.message ? (errors.email?.message as string) : null}
       />
       <PasswordInput
         label="Password"
-        ref={passwordRef}
         placeholder="Your password"
-        // required
         mt="md"
+        {...register("password")}
+        error={errors.password?.message ? (errors.password?.message as string) : null}
       />
-      <Button fullWidth mt="xl" type={"submit"}>
+      <Button fullWidth mt="xl" type={"submit"} loading={isSubmitting}>
         Sign in
       </Button>
     </form>

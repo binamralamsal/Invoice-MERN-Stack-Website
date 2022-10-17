@@ -12,9 +12,13 @@ interface MainLinkProps {
 }
 
 export function MainLink({ icon, color, label, to }: MainLinkProps) {
-  const { classes } = useStyles();
+  const { classes, cx } = useStyles();
   return (
-    <UnstyledButton component={Link} to={to} className={classes.linkButton}>
+    <UnstyledButton
+      component={Link}
+      to={to}
+      className={cx(classes.linkButton, { [classes.linkActive]: to === window.location.pathname })}
+    >
       <Group>
         <ThemeIcon color={color} variant="light">
           {icon}

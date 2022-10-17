@@ -1,5 +1,12 @@
 import { UnstyledButton, Group, Avatar, Text, Box, useMantineTheme, Menu } from "@mantine/core";
-import { IconChevronRight, IconChevronLeft, IconLogout, IconSettings } from "@tabler/icons";
+import { showNotification } from "@mantine/notifications";
+import {
+  IconChevronRight,
+  IconChevronLeft,
+  IconLogout,
+  IconSettings,
+  IconCheck,
+} from "@tabler/icons";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -15,6 +22,12 @@ export function User() {
   const onLogout = () => {
     storage.clearToken();
     navigate("/login");
+    showNotification({
+      icon: <IconCheck size={16} />,
+      color: "teal",
+      title: "Logged out successfully",
+      message: "You can login again if you wish to!",
+    });
   };
 
   return (

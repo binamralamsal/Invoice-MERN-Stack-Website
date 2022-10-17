@@ -12,4 +12,11 @@ export const useStyles = createStyles((theme) => ({
       backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0],
     },
   },
+
+  linkActive: {
+    "&, &:hover": {
+      backgroundColor: theme.fn.variant({ variant: "light", color: theme.primaryColor }).background,
+      color: theme.fn.variant({ variant: "light", color: theme.primaryColor }).color,
+    },
+  },
 }));
