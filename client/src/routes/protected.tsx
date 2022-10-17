@@ -1,5 +1,5 @@
 import { DashboardLayout } from "@/components/Layout/";
-import { ProtectedRoute } from "@/components/misc/ProtectedRoute";
+import { ProtectedRoute } from "@/components/Misc/";
 import { productsRoutes } from "@/features/products";
 
 const protectedRoutes = [

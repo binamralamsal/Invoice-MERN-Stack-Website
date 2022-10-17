@@ -49,7 +49,7 @@ export const LoginForm = () => {
         {...register("password")}
         error={errors.password?.message ? (errors.password?.message as string) : null}
       />
-      <Button fullWidth mt="xl" type={"submit"} loading={isSubmitting}>
+      <Button fullWidth mt="xl" type="submit" loading={isSubmitting}>
         Sign in
       </Button>
     </form>

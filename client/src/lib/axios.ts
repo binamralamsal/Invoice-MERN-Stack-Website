@@ -27,7 +27,7 @@ axios.interceptors.response.use(
     const message = responseData?.message || error.message;
 
     if (responseData?.message === "Validation error") {
-      responseData?.issues.map((issue: { message: string }, index: number) => {
+      responseData?.issues.forEach((issue: { message: string }, index: number) => {
         setTimeout(() => {
           showNotification({
             title: "Validation error",

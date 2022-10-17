@@ -4,7 +4,7 @@ module.exports = {
     node: true,
     es6: true,
   },
-  parserOptions: { ecmaVersion: 8, sourceType: "module" },
+  parserOptions: { ecmaVersion: 8, sourceType: "module", "project": "./tsconfig.json" },
   ignorePatterns: ["node_modules/*"],
   extends: ["eslint:recommended"],
   overrides: [
@@ -24,6 +24,7 @@ module.exports = {
       },
       extends: [
         "eslint:recommended",
+        "mantine",
         "plugin:import/errors",
         "plugin:import/warnings",
         "plugin:import/typescript",
@@ -48,15 +49,7 @@ module.exports = {
         "import/order": [
           "error",
           {
-            groups: [
-              "builtin",
-              "external",
-              "internal",
-              "parent",
-              "sibling",
-              "index",
-              "object",
-            ],
+            groups: ["builtin", "external", "internal", "parent", "sibling", "index", "object"],
             "newlines-between": "always",
             alphabetize: { order: "asc", caseInsensitive: true },
           },
@@ -77,6 +70,8 @@ module.exports = {
         "@typescript-eslint/no-explicit-any": ["off"],
 
         "prettier/prettier": ["error", {}, { usePrettierrc: true }],
+        "import/no-cycle": "off",
+        "no-param-reassign": "off"
       },
     },
   ],
