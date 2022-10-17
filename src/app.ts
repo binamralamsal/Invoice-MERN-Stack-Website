@@ -58,7 +58,7 @@ class App {
       this.app.use(
         express.static(path.join(__dirname, "..", "client", "dist"))
       );
-      this.app.get("*", (req: Request, res: Response) => {
+      this.app.get("(.*)", (req: Request, res: Response) => {
         res.sendFile(
           path.resolve(__dirname, "..", "client", "dist", "index.html")
         );
