@@ -1,4 +1,9 @@
-import { modelOptions, getModelForClass, prop } from "@typegoose/typegoose";
+import {
+  modelOptions,
+  getModelForClass,
+  prop,
+  index,
+} from "@typegoose/typegoose";
 
 export class ProductSize {
   @prop({ required: true })

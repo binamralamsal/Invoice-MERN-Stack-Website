@@ -12,15 +12,22 @@ class ProductController {
    */
   public async getProducts(req: Request, res: Response) {
     const page = +(req.query.page || 1);
+    const searchQuery = req.query.search as string;
 
-    const totalProducts = await Product.countDocuments();
+    // const queryMatch: { $text?: { $search: string } } = {};
+    // if (searchQuery)
+    //   queryMatch.$text = { $search: new RegExp(searchQuery, "i") };
+
+    const totalProducts = await Product.countDocuments({
+      name: new RegExp(searchQuery, "i"),
+    });
     // const products = await Product.find({})
     //   .select("name totalRemainingStock createdAt")
     //   .skip((page - 1) * config.PAGINATION_ITEMS_PER_PAGE)
     //   .limit(config.PAGINATION_ITEMS_PER_PAGE);
 
     const products = await Product.aggregate([
-      { $match: {} },
+      { $match: { name: new RegExp(searchQuery, "i") } },
       {
         $addFields: {
           totalRemainingStock: {
