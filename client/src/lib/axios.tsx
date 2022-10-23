@@ -1,5 +1,6 @@
 import { showNotification } from "@mantine/notifications";
 import Axios, { AxiosRequestConfig } from "axios";
+import { IconX } from "@tabler/icons";
 
 import { API_URL } from "@/config";
 import storage from "@/utils/storage";
@@ -36,7 +37,7 @@ axios.interceptors.response.use(
           });
         }, 200 * index);
       });
-    } else showNotification({ message, color: "red" });
+    } else showNotification({ message, color: "red", icon: <IconX size={18} /> });
 
     return Promise.reject(error);
   }
