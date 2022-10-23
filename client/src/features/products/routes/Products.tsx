@@ -94,7 +94,7 @@ export const Products = () => {
                   <ActionIcon
                     variant="outline"
                     color="red"
-                    onClick={handleDeleteProduct(product._id)}
+                    onClick={() => handleDeleteProduct(product._id)}
                   >
                     <IconTrash size={18} />
                   </ActionIcon>
