@@ -3,7 +3,7 @@ import React from "react";
 
 import { MainLink } from "./MainLink";
 
-const data = [
+export const data = [
   { icon: <IconShoppingCart size={16} />, color: "blue", label: "Products", to: "/" },
   { icon: <IconFileInvoice size={16} />, color: "teal", label: "Invoices", to: "/invoices" },
 ];

@@ -1,4 +1,5 @@
 import { ColorSchemeProvider, MantineProvider } from "@mantine/core";
+import { ModalsProvider } from "@mantine/modals";
 import { NotificationsProvider } from "@mantine/notifications";
 import { NavigationProgress } from "@mantine/nprogress";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -26,7 +27,9 @@ export const AppProvider = ({ children }: AppProviderProps) => {
           <MantineProvider withGlobalStyles withNormalizeCSS theme={{ colorScheme }}>
             <NavigationProgress />
             <NotificationsProvider>
-              <BrowserRouter>{children}</BrowserRouter>
+              <ModalsProvider>
+                <BrowserRouter>{children}</BrowserRouter>
+              </ModalsProvider>
             </NotificationsProvider>
           </MantineProvider>
         </ColorSchemeProvider>

@@ -1,23 +1,21 @@
-import { UnstyledButton, Group, Avatar, Text, Box, useMantineTheme, Menu } from "@mantine/core";
+import { UnstyledButton, Group, Avatar, Text, Box, Menu } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
-import {
-  IconChevronRight,
-  IconChevronLeft,
-  IconLogout,
-  IconSettings,
-  IconCheck,
-} from "@tabler/icons";
+import { IconChevronRight, IconLogout, IconSettings, IconCheck } from "@tabler/icons";
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+import { getUser } from "@/features/auth";
 import storage from "@/utils/storage";
 
 import { useStyles } from "./style";
+import { UserSkeleton } from "./UserSkeleton";
 
 export function User() {
   const { classes } = useStyles();
   const navigate = useNavigate();
-  const theme = useMantineTheme();
+
+  const { data, isLoading } = useQuery(["current-user"], getUser);
 
   const onLogout = () => {
     storage.clearToken();
@@ -30,26 +28,31 @@ export function User() {
     });
   };
 
+  const renderUserDetails = () => {
+    if (isLoading) return <UserSkeleton />;
+    return (
+      <>
+        <Avatar src={null} color="red" radius="xl" />
+        <Box sx={{ flex: 1 }}>
+          <Text size="sm" weight={500}>
+            {data?.name}
+          </Text>
+          <Text color="dimmed" size="xs">
+            {data?.email}
+          </Text>
+        </Box>
+      </>
+    );
+  };
+
   return (
     <Box className={classes.userBox}>
       <Menu shadow="md" width={200}>
         <Menu.Target>
           <UnstyledButton className={classes.userButton}>
             <Group>
-              <Avatar
-                src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=255&q=80"
-                radius="xl"
-              />
-              <Box sx={{ flex: 1 }}>
-                <Text size="sm" weight={500}>
-                  Amy Horsefighter
-                </Text>
-                <Text color="dimmed" size="xs">
-                  ahorsefighter@gmail.com
-                </Text>
-              </Box>
-
-              {theme.dir === "ltr" ? <IconChevronRight size={18} /> : <IconChevronLeft size={18} />}
+              {renderUserDetails()}
+              <IconChevronRight size={18} />
             </Group>
           </UnstyledButton>
         </Menu.Target>
