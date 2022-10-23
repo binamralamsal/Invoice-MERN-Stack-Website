@@ -103,7 +103,7 @@ class ProductController {
    * @access  Admin
    */
   public async deleteProduct(req: Request, res: Response) {
-    await Product.deleteOne({ id: req.params.id });
+    await Product.deleteOne({ _id: req.params.id });
     res.json({ status: 200, message: "Product deleted successfully" });
   }
 }

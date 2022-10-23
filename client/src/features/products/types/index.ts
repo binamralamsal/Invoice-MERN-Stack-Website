@@ -1,9 +1,11 @@
+export type Product = {
+  _id: string;
+  name: string;
+  totalRemainingStock: number;
+};
+
 export type ProductsResponse = {
-  products: {
-    _id: string;
-    name: string;
-    totalRemainingStock: number;
-  }[];
+  products: Product[];
   currentPage: number;
   hasNextPage: boolean;
   hasPreviousPage: boolean;
