@@ -31,7 +31,6 @@ export const Products = () => {
   });
 
   const handleDeleteProduct = (id: string) => {
-    return () =>
       openConfirmModal({
         title: "Delete your product",
         centered: true,
