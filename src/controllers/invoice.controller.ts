@@ -44,6 +44,7 @@ class InvoiceController {
       hasNextPage: config.PAGINATION_ITEMS_PER_PAGE * page < totalInvoices,
       hasPreviousPage: page > 1,
       totalPages: Math.ceil(totalInvoices / config.PAGINATION_ITEMS_PER_PAGE),
+      limit: config.PAGINATION_ITEMS_PER_PAGE,
     });
   }
 

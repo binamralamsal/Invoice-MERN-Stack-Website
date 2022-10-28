@@ -52,6 +52,7 @@ class ProductController {
       hasNextPage: config.PAGINATION_ITEMS_PER_PAGE * page < totalProducts,
       hasPreviousPage: page > 1,
       totalPages: Math.ceil(totalProducts / config.PAGINATION_ITEMS_PER_PAGE),
+      limit: config.PAGINATION_ITEMS_PER_PAGE,
     });
   }
 

@@ -10,4 +10,5 @@ export type ProductsResponse = {
   hasNextPage: boolean;
   hasPreviousPage: boolean;
   totalPages: number;
+  limit: number;
 };

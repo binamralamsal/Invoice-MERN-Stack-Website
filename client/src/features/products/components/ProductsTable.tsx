@@ -1,26 +1,32 @@
-import { Group, Table, Anchor, ActionIcon, Text, Center, Pagination } from "@mantine/core";
+import { Group, Table, Anchor, ActionIcon, Text } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
+import { showNotification } from "@mantine/notifications";
 import { IconEdit, IconTrash } from "@tabler/icons";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 
 import { deleteProduct } from "../api/deleteProduct";
-import { getProducts } from "../api/getProducts";
-import { Product } from "../types";
+import { useProducts } from "../hooks/useProducts";
+import { Product, ProductsResponse } from "../types";
 
 export const ProductsTable = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const location = useLocation();
-  const { data, refetch } = useQuery(["products"], () =>
-    getProducts({
-      page: searchParams.get("page"),
-      searchQuery: searchParams.get("search"),
-    })
-  );
+  const { data, refetch, isLoading } = useProducts<ProductsResponse>();
   const mutation = useMutation(deleteProduct, {
-    onSuccess: () => refetch(),
+    onSuccess: () => {
+      refetch();
+    },
   });
+
+  if (isLoading) {
+    // showNotification({
+    //   id: "load-products",
+    //   loading: true,
+    //   title: "Loading your products",
+    //   message: "Products is loading now, you cannot close this yet",
+    //   autoClose: false,
+    //   disallowClose: true,
+    // });
+  }
 
   const handleDeleteProduct = (product: Product) => {
     openConfirmModal({
@@ -39,73 +45,48 @@ export const ProductsTable = () => {
     });
   };
 
-  useEffect(() => {
-    refetch();
-  }, [location.search, refetch]);
-
-  const handlePaginationChange = (page: number) => {
-    searchParams.set("page", `${page}`);
-    setSearchParams(searchParams);
-  };
-
-  const currentPage = +(searchParams.get("page") || 1);
-  if (data?.totalPages && currentPage > data.totalPages) {
-    searchParams.set("page", String(data.totalPages));
-    setSearchParams(searchParams);
-  }
-
   return (
-    <>
-      <Table highlightOnHover mt="xl" verticalSpacing="md">
-        <thead>
-          <tr>
-            <th>S.n.</th>
-            <th>Name</th>
-            <th>Available Stocks</th>
-            <th>Actions</th>
+    <Table highlightOnHover mt="xl" verticalSpacing="md">
+      <thead>
+        <tr>
+          <th>S.n.</th>
+          <th>Name</th>
+          <th>Available Stocks</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {data?.products.map((product, index) => (
+          <tr key={product._id}>
+            <td>{(data.currentPage - 1) * data.limit + index + 1}</td>
+            <td>
+              <Anchor component={Link} to={`/products/${product._id}`}>
+                {product.name}
+              </Anchor>
+            </td>
+            <td>{product.totalRemainingStock}</td>
+            <td>
+              <Group>
+                <ActionIcon
+                  variant="outline"
+                  component={Link}
+                  to={`/products/edit/${product._id}`}
+                  color="blue"
+                >
+                  <IconEdit size={18} />
+                </ActionIcon>
+                <ActionIcon
+                  variant="outline"
+                  color="red"
+                  onClick={() => handleDeleteProduct(product)}
+                >
+                  <IconTrash size={18} />
+                </ActionIcon>
+              </Group>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {data?.products.map((product, index) => (
-            <tr key={product._id}>
-              <td>{index + 1}</td>
-              <td>
-                <Anchor component={Link} to={`/products/${product._id}`}>
-                  {product.name}
-                </Anchor>
-              </td>
-              <td>{product.totalRemainingStock}</td>
-              <td>
-                <Group>
-                  <ActionIcon
-                    variant="outline"
-                    component={Link}
-                    to={`/products/edit/${product._id}`}
-                    color="blue"
-                  >
-                    <IconEdit size={18} />
-                  </ActionIcon>
-                  <ActionIcon
-                    variant="outline"
-                    color="red"
-                    onClick={() => handleDeleteProduct(product)}
-                  >
-                    <IconTrash size={18} />
-                  </ActionIcon>
-                </Group>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-      <Center mt="lg">
-        <Pagination
-          withEdges
-          page={currentPage}
-          total={data?.totalPages || 0}
-          onChange={handlePaginationChange}
-        />
-      </Center>
-    </>
+        ))}
+      </tbody>
+    </Table>
   );
 };

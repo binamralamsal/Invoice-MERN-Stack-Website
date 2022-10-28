@@ -5,6 +5,7 @@ import { Link, useLocation, useSearchParams } from "react-router-dom";
 
 import { DashboardBreadcrumb } from "@/components/Misc";
 
+import { ProductsPagination } from "../components/ProductsPagination";
 import { ProductsTable } from "../components/ProductsTable";
 
 const breadcrumbItems = [{ to: "/", title: "Products" }];
@@ -48,6 +49,7 @@ export const Products = () => {
       </Stack>
 
       <ProductsTable />
+      <ProductsPagination />
     </Container>
   );
 };
