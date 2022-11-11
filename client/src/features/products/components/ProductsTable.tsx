@@ -1,6 +1,5 @@
 import { Group, Table, Anchor, ActionIcon, Text } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
-import { showNotification } from "@mantine/notifications";
 import { IconEdit, IconTrash } from "@tabler/icons";
 import { useMutation } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
@@ -10,23 +9,12 @@ import { useProducts } from "../hooks/useProducts";
 import { Product, ProductsResponse } from "../types";
 
 export const ProductsTable = () => {
-  const { data, refetch, isLoading } = useProducts<ProductsResponse>();
+  const { data, refetch } = useProducts<ProductsResponse>();
   const mutation = useMutation(deleteProduct, {
     onSuccess: () => {
       refetch();
     },
   });
-
-  if (isLoading) {
-    // showNotification({
-    //   id: "load-products",
-    //   loading: true,
-    //   title: "Loading your products",
-    //   message: "Products is loading now, you cannot close this yet",
-    //   autoClose: false,
-    //   disallowClose: true,
-    // });
-  }
 
   const handleDeleteProduct = (product: Product) => {
     openConfirmModal({
@@ -70,7 +58,7 @@ export const ProductsTable = () => {
                 <ActionIcon
                   variant="outline"
                   component={Link}
-                  to={`/products/edit/${product._id}`}
+                  to={`/products/${product._id}/edit`}
                   color="blue"
                 >
                   <IconEdit size={18} />

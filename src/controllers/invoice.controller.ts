@@ -179,7 +179,7 @@ class InvoiceController {
    */
   public async deleteInvoice(req: Request, res: Response) {
     const invoice = await Invoice.findByIdAndDelete(req.params.id);
-    res.json("Invoice deleted successfully");
+    res.json({ message: "Invoice deleted successfully" });
 
     if (!invoice) return;
 

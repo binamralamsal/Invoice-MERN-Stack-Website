@@ -12,3 +12,18 @@ export type ProductsResponse = {
   totalPages: number;
   limit: number;
 };
+
+export type ProductResponse = {
+  _id: string;
+  name: string;
+  sizes: {
+    _id: string;
+    name: string;
+    costPrice: number;
+    sellingPrice: number;
+    remainingStock: number;
+  }[];
+  totalRemainingStock: number;
+  createdAt: string;
+  updatedAt: string;
+};

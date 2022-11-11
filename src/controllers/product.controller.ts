@@ -27,7 +27,10 @@ class ProductController {
     //   .limit(config.PAGINATION_ITEMS_PER_PAGE);
 
     const products = await Product.aggregate([
-      { $match: { name: new RegExp(searchQuery, "i") } },
+      {
+        $match: { name: new RegExp(searchQuery, "i") },
+      },
+      { $sort: { createdAt: -1 } },
       {
         $addFields: {
           totalRemainingStock: {
@@ -101,7 +104,7 @@ class ProductController {
    * @access  Admin
    */
   public async putProduct(req: Request, res: Response) {
-    await Product.updateOne({ id: req.params.id }, req.body);
+    await Product.updateOne({ _id: req.params.id }, req.body);
     res.json({ status: 200, message: "Product updated successfully" });
   }
 
