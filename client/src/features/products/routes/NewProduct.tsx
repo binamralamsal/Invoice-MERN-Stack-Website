@@ -28,10 +28,28 @@ export const NewProduct = () => {
     defaultValues: {
       sizes: [
         {
-          name: "",
-          costPrice: NaN,
+          name: "30",
           remainingStock: NaN,
-          sellingPrice: NaN,
+        },
+        {
+          name: "28",
+          remainingStock: NaN,
+        },
+        {
+          name: "26",
+          remainingStock: NaN,
+        },
+        {
+          name: "24",
+          remainingStock: NaN,
+        },
+        {
+          name: "22",
+          remainingStock: NaN,
+        },
+        {
+          name: "20",
+          remainingStock: NaN,
         },
       ],
     },
@@ -68,9 +86,7 @@ export const NewProduct = () => {
         register={register}
         errors={errors}
         remove={remove}
-        onAddSize={() =>
-          append({ remainingStock: NaN, name: "", sellingPrice: NaN, costPrice: NaN })
-        }
+        onAddSize={() => append({ remainingStock: NaN, name: "" })}
         isSubmitting={isSubmitting}
         fields={fields}
       />

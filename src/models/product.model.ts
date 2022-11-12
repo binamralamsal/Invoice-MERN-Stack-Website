@@ -10,12 +10,6 @@ export class ProductSize {
   public name!: string;
 
   @prop({ required: true })
-  public costPrice!: number;
-
-  @prop({ required: true })
-  public sellingPrice!: number;
-
-  @prop({ required: true })
   public remainingStock!: number;
 }
 
@@ -33,6 +27,12 @@ export class ProductSchema {
 
   @prop({ required: true, default: [], type: () => ProductSize })
   public sizes!: ProductSize[];
+
+  @prop({ required: true })
+  public costPrice!: number;
+
+  @prop({ required: true })
+  public sellingPrice!: number;
 }
 
 export default getModelForClass(ProductSchema);

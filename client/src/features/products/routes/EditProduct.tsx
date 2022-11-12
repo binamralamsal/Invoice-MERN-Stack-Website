@@ -70,9 +70,7 @@ export const EditProduct = () => {
         register={register}
         errors={errors}
         remove={remove}
-        onAddSize={() =>
-          append({ remainingStock: NaN, name: "", sellingPrice: NaN, costPrice: NaN })
-        }
+        onAddSize={() => append({ remainingStock: NaN, name: "" })}
         isSubmitting={isSubmitting}
         fields={fields}
       />

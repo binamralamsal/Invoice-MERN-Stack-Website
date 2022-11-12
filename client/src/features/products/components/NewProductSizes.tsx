@@ -37,22 +37,6 @@ export const NewProductSizes = (props: IProps) => {
       </td>
       <td>
         <TextInput
-          type="number"
-          placeholder="Cost price"
-          {...props.register(`sizes.${props.index}.costPrice`, { valueAsNumber: true })}
-          error={props.errors.sizes?.[props.index]?.costPrice?.message}
-        />
-      </td>
-      <td>
-        <TextInput
-          placeholder="Selling price"
-          type="number"
-          error={props.errors.sizes?.[props.index]?.sellingPrice?.message}
-          {...props.register(`sizes.${props.index}.sellingPrice`, { valueAsNumber: true })}
-        />
-      </td>
-      <td>
-        <TextInput
           placeholder="Remaining stock"
           type="number"
           error={props.errors.sizes?.[props.index]?.remainingStock?.message}

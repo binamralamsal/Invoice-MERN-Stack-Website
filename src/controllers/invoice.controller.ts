@@ -84,7 +84,7 @@ class InvoiceController {
                 $map: {
                   input: "$items",
                   in: {
-                    $multiply: ["$$this.quantity", "$$this.size.costPrice"],
+                    $multiply: ["$$this.quantity", "$$this.costPrice"],
                   },
                 },
               },
@@ -97,10 +97,7 @@ class InvoiceController {
                   $add: [
                     "$$value",
                     {
-                      $multiply: [
-                        "$$this.quantity",
-                        "$$this.size.sellingPrice",
-                      ],
+                      $multiply: ["$$this.quantity", "$$this.sellingPrice"],
                     },
                   ],
                 },

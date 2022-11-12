@@ -24,16 +24,33 @@ export const ProductForm = (props: IProps) => {
   return (
     <Stack mt="xl">
       <form onSubmit={props.onSubmit}>
-        <Flex>
+        <Flex gap="xl">
           <TextInput
             placeholder="Product name"
             label="Product name"
             size="md"
             {...props.register("name")}
             error={props.errors.name?.message}
+            style={{ flex: 2 }}
+          />
+          <TextInput
+            type="number"
+            placeholder="Cost price"
+            label="Cost price"
+            size="md"
+            {...props.register("costPrice", { valueAsNumber: true })}
+            error={props.errors.costPrice?.message}
             style={{ flex: 1 }}
           />
-          <div style={{ flex: 1 }} />
+          <TextInput
+            placeholder="Selling price"
+            label="Selling price"
+            type="number"
+            size="md"
+            error={props.errors.sellingPrice?.message}
+            {...props.register(`sellingPrice`, { valueAsNumber: true })}
+            style={{ flex: 1 }}
+          />
         </Flex>
 
         <Flex justify="space-between" mt="xl">
@@ -43,13 +60,11 @@ export const ProductForm = (props: IProps) => {
           </Button>
         </Flex>
 
-        <Table verticalSpacing="lg">
+        <Table verticalSpacing="sm">
           <thead>
             <tr>
               <th>S.n.</th>
               <th>Size name</th>
-              <th>Cost price</th>
-              <th>Selling price</th>
               <th>Remaining stock</th>
             </tr>
           </thead>

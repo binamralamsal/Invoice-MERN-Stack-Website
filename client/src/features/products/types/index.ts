@@ -19,10 +19,10 @@ export type ProductResponse = {
   sizes: {
     _id: string;
     name: string;
-    costPrice: number;
-    sellingPrice: number;
     remainingStock: number;
   }[];
+  costPrice: number;
+  sellingPrice: number;
   totalRemainingStock: number;
   createdAt: string;
   updatedAt: string;

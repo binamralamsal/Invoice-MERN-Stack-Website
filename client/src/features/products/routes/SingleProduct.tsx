@@ -30,23 +30,35 @@ export const SingleProduct = () => {
       </Flex>
 
       <Stack mt="xl">
-        <Flex direction="column">
-          <Flex direction="row" align="center" gap={5}>
-            <strong>Name: </strong>
-            <p style={{ margin: 0 }}>{data.name}</p>
-          </Flex>
-          <Flex direction="row" align="center" gap={5}>
-            <strong>Total Remaining Stock: </strong>
-            <p style={{ margin: 0 }}>{data.totalRemainingStock}</p>
-          </Flex>
-          <Flex direction="row" align="center" gap={5}>
-            <strong>Created At: </strong>
-            <p style={{ margin: 0 }}>{new Date(data.createdAt).toLocaleString()}</p>
-          </Flex>
-          <Flex direction="row" align="center" gap={5}>
-            <strong>Last Updated At: </strong>
-            <p style={{ margin: 0 }}>{new Date(data.updatedAt).toLocaleString()}</p>
-          </Flex>
+        <Flex gap="50px">
+          <div>
+            <Flex direction="row" align="center" gap={5}>
+              <strong>Name: </strong>
+              <p style={{ margin: 0 }}>{data.name}</p>
+            </Flex>
+            <Flex direction="row" align="center" gap={5}>
+              <strong>Cost Price: </strong>
+              <p style={{ margin: 0 }}>{data.costPrice}</p>
+            </Flex>
+            <Flex direction="row" align="center" gap={5}>
+              <strong>Selling Price: </strong>
+              <p style={{ margin: 0 }}>{data.sellingPrice}</p>
+            </Flex>
+          </div>
+          <div>
+            <Flex direction="row" align="center" gap={5}>
+              <strong>Total Remaining Stock: </strong>
+              <p style={{ margin: 0 }}>{data.totalRemainingStock}</p>
+            </Flex>
+            <Flex direction="row" align="center" gap={5}>
+              <strong>Created At: </strong>
+              <p style={{ margin: 0 }}>{new Date(data.createdAt).toLocaleString()}</p>
+            </Flex>
+            <Flex direction="row" align="center" gap={5}>
+              <strong>Last Updated At: </strong>
+              <p style={{ margin: 0 }}>{new Date(data.updatedAt).toLocaleString()}</p>
+            </Flex>
+          </div>
         </Flex>
 
         <Flex justify="space-between" mt="xl">
@@ -58,8 +70,8 @@ export const SingleProduct = () => {
             <tr>
               <th>S.n.</th>
               <th>Size name</th>
-              <th>Cost price</th>
-              <th>Selling price</th>
+              {/*<th>Cost price</th>*/}
+              {/*<th>Selling price</th>*/}
               <th>Remaining stock</th>
             </tr>
           </thead>
@@ -68,8 +80,8 @@ export const SingleProduct = () => {
               <tr key={size._id}>
                 <td>{index + 1}</td>
                 <td>{size.name}</td>
-                <td>{size.costPrice}</td>
-                <td>{size.sellingPrice}</td>
+                {/*<td>{size.costPrice}</td>*/}
+                {/*<td>{size.sellingPrice}</td>*/}
                 <td>{size.remainingStock}</td>
               </tr>
             ))}

@@ -9,12 +9,6 @@ import { ProductSchema } from "./product.model";
 class InvoiceProductSize {
   @prop({ required: true })
   public name!: string;
-
-  @prop({ required: true })
-  public costPrice!: number;
-
-  @prop({ required: true })
-  public sellingPrice!: number;
 }
 
 class InvoiceItem {
@@ -23,6 +17,12 @@ class InvoiceItem {
 
   @prop({ type: InvoiceProductSize })
   public size!: InvoiceProductSize;
+
+  @prop({ required: true })
+  public costPrice!: number;
+
+  @prop({ required: true })
+  public sellingPrice!: number;
 
   @prop({ required: true })
   public quantity!: number;
