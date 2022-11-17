@@ -44,6 +44,10 @@ export const SingleProduct = () => {
               <strong>Selling Price: </strong>
               <p style={{ margin: 0 }}>{data.sellingPrice}</p>
             </Flex>
+            <Flex direction="row" align="center" gap={5}>
+              <strong>Number of dabbi per boxes: </strong>
+              <p style={{ margin: 0 }}>{data.numberOfSubBoxes}</p>
+            </Flex>
           </div>
           <div>
             <Flex direction="row" align="center" gap={5}>

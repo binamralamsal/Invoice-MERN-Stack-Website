@@ -1,19 +1,19 @@
 import { InfiniteQueryObserverResult, useQuery } from "@tanstack/react-query";
 import { useLocation, useSearchParams } from "react-router-dom";
 
-import { getProducts } from "../api/getProducts";
+import { getInvoices } from "../api/getInvoices";
 
-export const useProducts = <T,>(
-  select?: (data: Awaited<ReturnType<typeof getProducts>>) => T,
+export const useInvoices = <T,>(
+  select?: (data: Awaited<ReturnType<typeof getInvoices>>) => T,
   notifyOnChangeProps?: Array<keyof InfiniteQueryObserverResult> | "all"
 ) => {
   const [searchParams] = useSearchParams();
   const location = useLocation();
 
   return useQuery(
-    ["products", location.search],
+    ["invoices", location.search],
     () =>
-      getProducts({
+      getInvoices({
         page: searchParams.get("page"),
         searchQuery: searchParams.get("search"),
       }),
@@ -26,4 +26,4 @@ export const useProducts = <T,>(
   );
 };
 
-export const useTotalProductsPagesCount = () => useProducts((data) => data.totalPages, ["data"]);
+export const useTotalInvoicesPagesCount = () => useInvoices((data) => data.totalPages, ["data"]);

@@ -15,6 +15,7 @@ export const productValidator = z.object({
     .nonempty("Sizes can't be empty"),
   costPrice: z.number({ required_error: "Cost price is required" }),
   sellingPrice: z.number({ required_error: "Selling price is required" }),
+  numberOfSubBoxes: z.enum(["6", "12"]),
 });
 
 export type ProductCredentialsDTO = z.infer<typeof productValidator>;

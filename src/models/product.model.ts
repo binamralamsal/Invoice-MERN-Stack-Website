@@ -33,6 +33,9 @@ export class ProductSchema {
 
   @prop({ required: true })
   public sellingPrice!: number;
+
+  @prop({ enum: ["6", "12"] })
+  public numberOfSubBoxes!: string;
 }
 
 export default getModelForClass(ProductSchema);

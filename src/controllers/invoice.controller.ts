@@ -29,7 +29,6 @@ class InvoiceController {
    */
   public async getInvoices(req: Request, res: Response) {
     const page = +(req.query.page || 1);
-    console.log("get", config.PAGINATION_ITEMS_PER_PAGE);
 
     const totalInvoices = await Invoice.countDocuments();
     const invoices = await Invoice.find({})
@@ -39,7 +38,7 @@ class InvoiceController {
       .limit(config.PAGINATION_ITEMS_PER_PAGE);
 
     res.json({
-      products: invoices,
+      invoices,
       currentPage: page,
       hasNextPage: config.PAGINATION_ITEMS_PER_PAGE * page < totalInvoices,
       hasPreviousPage: page > 1,

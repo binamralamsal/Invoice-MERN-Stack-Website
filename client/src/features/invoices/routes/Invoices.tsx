@@ -1,4 +1,4 @@
-import { TextInput, Title, Button, Stack, Container } from "@mantine/core";
+import { Container, Stack, TextInput, Title, Button } from "@mantine/core";
 import { IconSearch } from "@tabler/icons";
 import { FormEvent, useEffect, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
@@ -6,15 +6,16 @@ import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { DashboardBreadcrumb } from "@/components/Misc";
 import { TablePagination } from "@/components/Misc/Pagination";
 
-import { ProductsTable } from "../components/ProductsTable";
-import { useTotalProductsPagesCount } from "../hooks/useProducts";
+import { InvoicesTable } from "../components/InvoicesTable";
+import { useTotalInvoicesPagesCount } from "../hooks/useInvoices";
 
-const breadcrumbItems = [{ to: "/", title: "Products" }];
+const breadcrumbItems = [{ to: "/invoices", title: "Invoices" }];
 
-export const Products = () => {
+export const Invoices = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
-  const { data: totalProductsPages } = useTotalProductsPagesCount();
+
+  const { data: totalInvoicesPages } = useTotalInvoicesPagesCount();
   const location = useLocation();
 
   const handleSearchInputChange = (event: FormEvent) => {
@@ -32,7 +33,7 @@ export const Products = () => {
     <Container size="xl">
       <DashboardBreadcrumb items={breadcrumbItems} />
       <Title order={2} mt="sm" size="h1">
-        Products
+        Invoices
       </Title>
 
       <Stack mt="xl" justify="space-between" style={{ flexDirection: "row" }}>
@@ -45,13 +46,13 @@ export const Products = () => {
             value={searchQuery}
           />
         </form>
-        <Button component={Link} to="/products/new" size="md">
-          Add Product
+        <Button component={Link} to="/invoices/new" size="md">
+          Add Invoice
         </Button>
       </Stack>
 
-      <ProductsTable />
-      <TablePagination totalPages={totalProductsPages} />
+      <InvoicesTable />
+      <TablePagination totalPages={totalInvoicesPages} />
     </Container>
   );
 };

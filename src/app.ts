@@ -61,7 +61,7 @@ class App {
         );
       });
     } else {
-      this.app.get("/", (req, res) => {
+      this.app.get("/", (_, res) => {
         res.send("API is running....");
       });
     }

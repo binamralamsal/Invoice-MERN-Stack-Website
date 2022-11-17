@@ -1,4 +1,4 @@
-import { Flex, Stack, TextInput, Button, Title, Table } from "@mantine/core";
+import { Flex, Stack, TextInput, Button, Title, Table, Radio } from "@mantine/core";
 import {
   FieldArrayWithId,
   FieldErrors,
@@ -51,6 +51,13 @@ export const ProductForm = (props: IProps) => {
             {...props.register(`sellingPrice`, { valueAsNumber: true })}
             style={{ flex: 1 }}
           />
+        </Flex>
+
+        <Flex mt="xl">
+          <Radio.Group label="Number per boxe q s" error={props.errors.numberOfSubBoxes?.message}>
+            <Radio value="6" label="6" {...props.register("numberOfSubBoxes")} />
+            <Radio value="12" label="12" {...props.register("numberOfSubBoxes")} />
+          </Radio.Group>
         </Flex>
 
         <Flex justify="space-between" mt="xl">

@@ -1,13 +1,13 @@
-import { ProductCredentialsDTO } from "../validators";
+import { InvoiceCredentialsDTO } from "../validators";
 
-export type Product = {
+export type Invoice = {
   _id: string;
-  name: string;
-  totalRemainingStock: number;
+  customerName: string;
+  createdAt: string;
 };
 
-export type ProductsResponse = {
-  products: Product[];
+export type InvoicesResponse = {
+  invoices: Invoice[];
   currentPage: number;
   hasNextPage: boolean;
   hasPreviousPage: boolean;
@@ -15,7 +15,7 @@ export type ProductsResponse = {
   limit: number;
 };
 
-export type ProductResponse = ProductCredentialsDTO & {
+export type InvoiceResponse = InvoiceCredentialsDTO & {
   _id: string;
   totalRemainingStock: number;
   createdAt: string;
